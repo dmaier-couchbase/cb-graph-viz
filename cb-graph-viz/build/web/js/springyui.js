@@ -96,15 +96,42 @@ jQuery.fn.springy = function(params) {
 		renderer.start();
 	});
 
+        jQuery(canvas).click(function(e) {
+           
+            var pos = jQuery(this).offset();
+            var p = fromScreen({x: e.pageX - pos.left, y: e.pageY - pos.top});
+            selected = layout.nearest(p);
+            node = selected.node;
+            
+            if (node && node.data) {
+                
+                //Do something
+            }
+            
+        });
+
+
 	// Basic double click handler
 	jQuery(canvas).dblclick(function(e) {
-		var pos = jQuery(this).offset();
+		
+                var pos = jQuery(this).offset();
 		var p = fromScreen({x: e.pageX - pos.left, y: e.pageY - pos.top});
 		selected = layout.nearest(p);
 		node = selected.node;
-		if (node && node.data && node.data.ondoubleclick) {
-			node.data.ondoubleclick();
-		}
+		
+                //-- TODO: This is customized code and should be changed in order to be more generic
+                if (node && node.data) {
+                                        
+                    var input = $("#inputStartVertex");
+              
+                    var id = node.id;
+                    
+                    console.log("Setting new input value " + id )
+                    input.val(id);
+                    
+                    var button = $("#submitButton");
+                    button.click();	
+                }
 	});
 
 	jQuery(canvas).mousemove(function(e) {
@@ -115,6 +142,7 @@ jQuery.fn.springy = function(params) {
 		if (dragged !== null && dragged.node !== null) {
 			dragged.point.p.x = p.x;
 			dragged.point.p.y = p.y;
+                        
 		}
 
 		renderer.start();

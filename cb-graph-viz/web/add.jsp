@@ -39,25 +39,32 @@ and open the template in the editor.
 
                 //Mixed in Java code 
                 <%
-                String startNode = request.getParameter("start_vertex");
+                String id = request.getParameter("id");
+                String age = request.getParameter("age");
+                String to = request.getParameter("to");
+                String label = request.getParameter("label");
+                
                 Graph graph = new CBGraph();
 
-                if (startNode != null) {
+                if (id != null && age != null && to != null && label != null) {
 
-                    VizVertexBean vizBean = new VizVertexBean(graph.getVertex(startNode), out);
-                    vizBean.draw();
-
-                } else {
-
-                    DemoDataBean demoDataBean = new DemoDataBean();
-                    demoDataBean.load(graph);
+                    Vertex newV = graph.addVertex(id);
+                    
+                    if (newV != null) {
+                        
+                        newV.setProperty("age", age);
+                 
+                        Vertex toV = graph.getVertex(to);
+                        
+                        if (toV != null) {
+                            
+                            graph.addEdge(null,newV ,toV, label);
+                            
+                            out.println("alert('Successfully created the vertex')");
+                        }
+                    }
                 }
                 %>
-
-                var springy = jQuery('#springydemo').springy({
-                    graph: graph
-                });
-
            });
         </script>
 
@@ -74,33 +81,21 @@ and open the template in the editor.
             </div>
             
            
-            <form id="myform" action="index.jsp" method="GET">
+            <form id="myform" action="add.jsp" method="GET">
                 <div class="form-group">
-                    <label for="inputStartVertex">Start vertex</label>
-                    <input type="text" class="form-control" name="start_vertex" id="inputStartVertex" placeholder="Please provide the id of a start vertex!">
+                    <label for="id">Id</label>
+                    <input type="text" class="form-control" name="id" id="id" placeholder="">
+                    <label for="age">Age</label>
+                    <input type="text" class="form-control" name="age" id="age" placeholder="">
+                    <label for="to">To</label>
+                    <input type="text" class="form-control" name="to" id="to" placeholder="">
+                    <label for="label">Label</label>
+                    <input type="text" class="form-control" name="label" id="label" placeholder="">
                 </div>
 
                 <button type="submit" id="submitButton" class="btn btn-default">OK</button>
             </form>
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <canvas id="springydemo" width="640" height="480"></canvas>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="panel panel-default" style="margin: 30px">
-                            <div class="panel-heading">JSON</div>
-                            <div class="panel-body" id="propsPanel">
-                                <div class="form-group">
-                                    <label for="propsView" id="propsLabel"></label>
-                                    <textarea class="form-control" rows="5" id="propsView"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>     
         </div>
 
     </body>

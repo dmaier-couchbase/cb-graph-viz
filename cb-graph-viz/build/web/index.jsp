@@ -1,3 +1,5 @@
+<%@page import="com.couchbase.graph.viz.DemoDataBean"%>
+<%@page import="com.couchbase.graph.viz.VizVertexBean"%>
 <%@page import="com.couchbase.client.java.error.DocumentAlreadyExistsException"%>
 <%@page import="com.tinkerpop.blueprints.Edge"%>
 <%@page import="com.tinkerpop.blueprints.Direction"%>
@@ -25,106 +27,53 @@ and open the template in the editor.
         <script src="js/springyui.js"></script>
         <script src="js/bootstrap.min.js"></script>
 
-      
+
+
         <script>
-             
-            //Basic JS code, suing Springy
-            var graph = new Springy.Graph(); 
-            
-            function resubmit(vId) {
-                
-                var input = document.getElementById("inputStartVertex");
-                input.value = vId;
-                
-                var button = document.getElementById("submitButton");
-               button.click();
-                
-            } 
-            
-            
-            //Mixed in Java code 
-            <%
-                 String startNode = request.getParameter("start_vertex");
-              
-                 Graph graph = new CBGraph();
-                 
-                 
-                 
-                 
-                 if (startNode != null) {
-                        
-                     Vertex v = graph.getVertex(startNode);
-                     
-                     if (v != null) {
-                         
-                         out.println("graph.addNodes('" + v.getId() + "');");
-                         
-                         Iterable<Edge> edges = v.getEdges(Direction.BOTH);
-                         
-                         for (Edge e : edges) {
-                             
-                             String label = e.getLabel();
-                             
-                             Vertex v2 = e.getVertex(Direction.IN);
-                            
-                             out.println("graph.addNodes('" + v2.getId()  + "');");                            
-                             out.println("graph.addEdges(['" + v.getId() + "', '" + v2.getId() + "', {color: '#00A0B0', label: '"+ label +"'}]);");
-                         
-                             Vertex v3 = e.getVertex(Direction.OUT);
-                             
-                             out.println("graph.addNodes('" + v3.getId()  + "');");                            
-                             out.println("graph.addEdges(['" + v3.getId() + "', '" + v.getId() + "', {color: '#00A0B0', label: '"+ label +"'}]);");
-                         
-                         }
-                     }
-                 
-                 }
-                 else {
-                     
-                     try {
-                     
-                        Vertex v_bart = graph.addVertex("bart");
-                        v_bart.setProperty("age", 10);        
-                        
-                        Vertex v_march = graph.addVertex("march");
-                        v_march.setProperty("age", 45);
-                        
-                        Vertex v_homer = graph.addVertex("homer");
-                        v_march.setProperty("age", 47);
-                        
-                        Vertex v_lisa = graph.addVertex("lisa");
-                        v_march.setProperty("age", 8);
-                        
-                        Edge e_1 = graph.addEdge(null, v_bart, v_homer, "son of");
-                        Edge e_2 = graph.addEdge(null, v_bart, v_march, "son of");
-                        Edge e_3 = graph.addEdge(null, v_bart, v_lisa, "brother of");
-                        Edge e_4 = graph.addEdge(null, v_lisa, v_bart, "sister of");
-                        Edge e_5 = graph.addEdge(null, v_march, v_lisa, "mother_of");
-                        
-                     } catch (DocumentAlreadyExistsException e) {
-                         
-                         //Ignore it 
-                     }
-                 }
-            %>
-    
-            
+
             jQuery(function () {
+
+                //Basic JS code, suing Springy
+                var graph = new Springy.Graph();
+       
+
+                //Mixed in Java code 
+                <%
+                String startNode = request.getParameter("start_vertex");
+                Graph graph = new CBGraph();
+
+                if (startNode != null) {
+
+                    VizVertexBean vizBean = new VizVertexBean(graph.getVertex(startNode), out);
+                    vizBean.draw();
+
+                } else {
+
+                    DemoDataBean demoDataBean = new DemoDataBean();
+                    demoDataBean.load(graph);
+                }
+                %>
+
                 var springy = jQuery('#springydemo').springy({
                     graph: graph
                 });
-            });
+
+           });
         </script>
 
-        
+
         <div class="container">
-            
-             <div style="margin: 30px" id="header">
+
+            <div style="margin: 30px" id="header">
                 <a href = "index.jsp"><img src="images/cb.png" height="30px" alt="CB Graph Viz"/></a>
                 <font size = "4" style="margin: 10px">GraphViz Demo</font>
-             </div>
+                <div style="margin: 30px">
+                    <a style="margin-left: 20px" href="index.jsp">Browse</a>
+                    <a style="margin-left: 20px" href="add.jsp">Add</a>
+                </div>
+            </div>
             
-            
+           
             <form id="myform" action="index.jsp" method="GET">
                 <div class="form-group">
                     <label for="inputStartVertex">Start vertex</label>
@@ -134,9 +83,25 @@ and open the template in the editor.
                 <button type="submit" id="submitButton" class="btn btn-default">OK</button>
             </form>
 
-            
-            <canvas id="springydemo" width="640" height="480"></canvas>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <canvas id="springydemo" width="640" height="480"></canvas>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-default" style="margin: 30px">
+                            <div class="panel-heading">JSON</div>
+                            <div class="panel-body" id="propsPanel">
+                                <div class="form-group">
+                                    <label for="propsView" id="propsLabel"></label>
+                                    <textarea class="form-control" rows="5" id="propsView"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>     
         </div>
-        
+
     </body>
 </html>
