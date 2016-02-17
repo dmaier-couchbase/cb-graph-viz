@@ -1,2 +1,3 @@
-# cb-graph-viz
+# CBGraph Viz Demo
+
 A graph visualization project for Couchbase
