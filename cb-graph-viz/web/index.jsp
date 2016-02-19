@@ -24,7 +24,9 @@ and open the template in the editor.
     <body>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
         <script src="js/springy.js"></script>
+        <script src="js/cbspringy.js"></script>
         <script src="js/springyui.js"></script>
+        <script src="js/cbspringyui.js"></script>
         <script src="js/bootstrap.min.js"></script>
 
 
@@ -34,7 +36,7 @@ and open the template in the editor.
             jQuery(function () {
 
                 //Basic JS code, suing Springy
-                var graph = new Springy.Graph();
+                var graph = new CBGraphViz();
        
 
                 //Mixed in Java code 
@@ -58,7 +60,8 @@ and open the template in the editor.
                 %>
 
                 var springy = jQuery('#springydemo').springy({
-                    graph: graph
+                    graph: graph,
+                    nodeSelected : onNodeSelected
                 });
 
            });

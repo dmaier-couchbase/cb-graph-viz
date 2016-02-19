@@ -90,19 +90,8 @@
 		// accepts variable number of arguments, where each argument
 		// is a string that becomes both node identifier and label
 		for (var i = 0; i < arguments.length; i++) {
-                    
-                    var arg = arguments[i];
-                
-                    var name = "";
-                    var props = null;
-                    
-                    if (typeof arg == 'string')
-                        name = arg;
-                    else {
-                        name  = arg.name;
-                        props = arg.props;
-                    }
-			var node = new Node(name, {label:name, props:props});
+			var name = arguments[i];
+			var node = new Node(name, {label:name});
 			this.addNode(node);
 		}
 	};
@@ -142,9 +131,7 @@
 		// is a triple [nodeid1, nodeid2, attributes]
 		for (var i = 0; i < arguments.length; i++) {
 			var e = arguments[i];
-
 			var node1 = this.nodeSet[e[0]];
-                    
 			if (node1 == undefined) {
 				throw new TypeError("invalid node name: " + e[0]);
 			}
@@ -163,7 +150,7 @@
 		this.addNode(node);
 		return node;
 	};
-        
+
 	Graph.prototype.newEdge = function(source, target, data) {
 		var edge = new Edge(this.nextEdgeId++, source, target, data);
 		this.addEdge(edge);
