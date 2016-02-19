@@ -27,9 +27,6 @@ import javax.servlet.jsp.JspWriter;
  */
 public class VizVertexBean {
     
-    public static final int MAX_DEPTH = 3;
-    public static int depth = 0;
-    
     /**
      * The vertex to visualize
      */
@@ -40,14 +37,6 @@ public class VizVertexBean {
      */
     private JspWriter out;
     
-    
-    public VizVertexBean() {
-    }
-
-    public VizVertexBean(Vertex vertex, JspWriter out) {
-        this.vertex = vertex;
-        this.out = out;
-    }
 
     public void setVertex(Vertex vertex) {
         this.vertex = vertex;
@@ -73,16 +62,23 @@ public class VizVertexBean {
      * @throws java.io.IOException
      */
     public void draw() throws IOException {
-     
-        depth = depth + 1;
         
         if (vertex != null) {
                          
             out.println("graph.addNodes({ name:'" + vertex.getId()  + "'});");
             
             out.println("var label= $('#propsLabel').html('" + vertex.getId() + "');");
-            out.println("var view = $('#propsView').val('"+ vertex.toString() + "');");
             
+            StringBuilder sb = new StringBuilder();
+            
+            for ( String propKey : vertex.getPropertyKeys() ) {
+                
+                Object propVal = vertex.getProperty(propKey);
+                
+                sb.append(propKey).append(" = ").append(propVal).append("<br/>");
+            }
+            
+            out.println("var view = $('#propsView').html('"+ sb.toString() + "');");
             
             //Get the incoming and outgoing edges of the vertex
             Iterable<Edge> edges = vertex.getEdges(Direction.BOTH);

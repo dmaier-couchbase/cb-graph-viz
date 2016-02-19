@@ -44,13 +44,16 @@ and open the template in the editor.
 
                 if (startNode != null) {
 
-                    VizVertexBean vizBean = new VizVertexBean(graph.getVertex(startNode), out);
+                    VizVertexBean vizBean = new VizVertexBean();
+                    vizBean.setVertex(graph.getVertex(startNode));
+                    vizBean.setOut(out);
                     vizBean.draw();
 
                 } else {
 
                     DemoDataBean demoDataBean = new DemoDataBean();
-                    demoDataBean.load(graph);
+                    demoDataBean.setGraph(graph);
+                    demoDataBean.load();
                 }
                 %>
 
@@ -90,11 +93,10 @@ and open the template in the editor.
                     </div>
                     <div class="col-sm-4">
                         <div class="panel panel-default" style="margin: 30px">
-                            <div class="panel-heading">JSON</div>
+                            <div class="panel-heading" id="propsLabel"></div>
                             <div class="panel-body" id="propsPanel">
                                 <div class="form-group">
-                                    <label for="propsView" id="propsLabel"></label>
-                                    <textarea class="form-control" rows="5" id="propsView"></textarea>
+                                    <div id="propsView"></div>
                                 </div>
                             </div>
                         </div>

@@ -1,3 +1,4 @@
+<%@page import="com.couchbase.graph.viz.AddVertexBean"%>
 <%@page import="com.couchbase.graph.viz.DemoDataBean"%>
 <%@page import="com.couchbase.graph.viz.VizVertexBean"%>
 <%@page import="com.couchbase.client.java.error.DocumentAlreadyExistsException"%>
@@ -48,21 +49,14 @@ and open the template in the editor.
 
                 if (id != null && age != null && to != null && label != null) {
 
-                    Vertex newV = graph.addVertex(id);
-                    
-                    if (newV != null) {
-                        
-                        newV.setProperty("age", age);
-                 
-                        Vertex toV = graph.getVertex(to);
-                        
-                        if (toV != null) {
-                            
-                            graph.addEdge(null,newV ,toV, label);
-                            
-                            out.println("alert('Successfully created the vertex')");
-                        }
-                    }
+                    AddVertexBean addV = new AddVertexBean();
+                    addV.setGraph(graph);
+                    addV.setAge(age);
+                    addV.setId(id);
+                    addV.setTo(to);
+                    addV.setLabel(label);
+         
+                    if (addV.add()) out.println("alert('Successfully created the vertex')");
                 }
                 %>
            });

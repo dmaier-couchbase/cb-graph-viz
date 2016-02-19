@@ -28,13 +28,24 @@ import com.tinkerpop.blueprints.Vertex;
  */
 public class DemoDataBean {
 
-    public void load(Graph graph) {
+    private Graph graph; 
+    
+    public Graph getGraph() {
+        return graph;
+    }
+
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
+    
+    public void load() {
 
         try {
 
             Vertex v_bart = graph.addVertex("bart");
             v_bart.setProperty("age", 10);
-
+            v_bart.setProperty("city", "Springfield");
+            
             Vertex v_marge = graph.addVertex("marge");
             v_marge.setProperty("age", 45);
 
